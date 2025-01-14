@@ -131,3 +131,14 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+import os
+from pathlib import Path
+
+# Путь к корневой директории вашего проекта
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Настройки для загрузки медиафайлов
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+

@@ -2,8 +2,10 @@ from lib2to3.fixes.fix_input import context
 
 from Scripts.bottle import response
 from django.contrib.auth import login
+from django.core.files.storage import default_storage
 from django.http import HttpResponse
 from django.template.defaultfilters import first
+from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
 from app.models import Users, Files, Demo
@@ -119,3 +121,36 @@ def check_password(req):
         }
 
     return Response(context)
+
+@api_view(["GET"])
+def get_files_user(req, user_id):
+    files_user = Files.objects.filter(user_id=user_id)
+    files_user_data = FileSerializer(files_user, many=True).data
+    return Response(files_user_data)
+
+@api_view(['POST'])
+def upload_file(request):
+    if request.method == 'POST':
+        # Проверяем, что файл был загружен
+        file = request.FILES["files"]
+        user_id = int(request.data.get('user_id')) if request.data.get('user_id') != "undefined" else None
+
+        if not file or not user_id:
+            return Response({'error': 'Файл и user_id обязательны.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Создаем запись в базе данных
+        file_instance = Files(
+            file_name=file.name,
+            file_link="",
+            user_id=user_id
+        )
+        file_instance.save()
+
+            # Сохраняем файл на жестком диске
+        file_name = default_storage.save(str(file_instance.id), file)
+
+            # files_return.append(FileSerializer(file_instance).data)
+
+        return Response({ "files": FileSerializer(file_instance).data }, status=status.HTTP_201_CREATED)
+
+    return Response({'error': 'Неверный метод запроса.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)

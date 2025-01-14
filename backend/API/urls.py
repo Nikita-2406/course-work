@@ -16,9 +16,11 @@ Including another URLconf
 """
 from rest_framework.routers import DefaultRouter
 
-from app.views import UsersViewSet, FilesViewSet, getLinkForFile, check_password
+# from app.views import UsersViewSet, FilesViewSet, get_files_user, getLinkForFile, check_password
 from django.contrib import admin
 from django.urls import path
+
+from app.views import UsersViewSet, FilesViewSet, getLinkForFile, check_password, get_files_user, upload_file
 
 # from app.views import testing
 
@@ -31,4 +33,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('get_link_for_file/<file_id>/', getLinkForFile),
     path("check_password/", check_password),
+    path("get_files_user/<user_id>/", get_files_user),
+    path("upload_file/", upload_file)
 ] + router.urls
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

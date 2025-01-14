@@ -2,8 +2,8 @@ POST http://127.0.0.1:8000/files/
 Content-Type: application/json
 
 {
-  "file_name": "файл",
-  "user_id": 5
+  "file_name": "только что",
+  "user_id": 10
 }
 
 ###
@@ -12,7 +12,7 @@ GET http://127.0.0.1:8000/files/
 
 ###
 
-GET http://127.0.0.1:8000/get_link_for_file/10/ 
+GET http://127.0.0.1:8000/get_link_for_file/16/ 
 
 ###
 
@@ -42,3 +42,7 @@ Content-Type: application/json
   "login": "-nikita-",
   "password": "1234",
 }
+
+###
+
+GET http://127.0.0.1:8000/get_files_user/10/

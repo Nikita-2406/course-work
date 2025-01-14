@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import { StartPage } from './UI/StartPage/StartPage'
 import { FilesWelcome } from './UI/files/FilesWelcome'
-import { Routes, Route, BrowserRouter } from "react-router"
+import { Routes, Route, BrowserRouter } from "react-router-dom"
 
 function App() {
   const [count, setCount] = useState(0)

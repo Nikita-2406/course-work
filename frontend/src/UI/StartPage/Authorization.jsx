@@ -1,25 +1,25 @@
-import { useState } from "react"
-import "./authorization.css"
+import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
+import "./authorization.css";
 
-export const Authorization = ({SetViewPage}) => {
-
+export const Authorization = ({ SetViewPage }) => {
   const [inputInfo, setInputInfo] = useState({
     login: "",
     password: "",
-  })
-  const [errorMsg, setErrorMsg] = useState('')
+  });
+  const [errorMsg, setErrorMsg] = useState('');
+  const navigate = useNavigate(); // Создаем экземпляр navigate
 
   const onChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setInputInfo((prev) => ({
-    ...prev, 
-    [name]: value
-  }))
-  }
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const onSubmit = (e) => {
-    e.preventDefault()
-    // console.log(inputInfo)
+    e.preventDefault();
     fetch('http://127.0.0.1:8000/check_password/', {
       method: "POST",
       body: JSON.stringify(inputInfo),
@@ -27,18 +27,18 @@ export const Authorization = ({SetViewPage}) => {
         "Content-Type": "application/json",
       }
     })
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    if (data.status_code === 200) {
-      SetViewPage("UserFiles")
-    } else {
-      setErrorMsg("Неверный логин или пароль")
-    }
-  });
-  }  
-
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      if (data.status_code === 200) {
+        console.log(data.user[0])
+        navigate('/files', { state: data.user[0] }); // Перенаправляем на страницу файлов
+      } else {
+        setErrorMsg("Неверный логин или пароль");
+      }
+    });
+  };
 
   return (
     <div className="container--form">
@@ -51,12 +51,9 @@ export const Authorization = ({SetViewPage}) => {
         </div>
         <div className="buttons--block">
           <button type="submit" className="button--form submit">Войти</button>
-          <button className="button--form" onClick={() => {SetViewPage("Registration")}}>Зарегестрироваться</button>
+          <button className="button--form" onClick={() => { SetViewPage("Registration") }}>Зарегестрироваться</button>
         </div>
-        
-        
       </form>
-      {/* <button onClick={funk}>123123123</button> */}
     </div>
-  )
-}
+  );
+};
