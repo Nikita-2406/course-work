@@ -3,7 +3,7 @@ from lib2to3.fixes.fix_input import context
 from Scripts.bottle import response
 from django.contrib.auth import login
 from django.core.files.storage import default_storage
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse, Http404
 from django.template.defaultfilters import first
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ViewSet
@@ -154,3 +154,32 @@ def upload_file(request):
         return Response({ "files": FileSerializer(file_instance).data }, status=status.HTTP_201_CREATED)
 
     return Response({'error': 'Неверный метод запроса.'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+import os
+from django.http import HttpResponse, Http404
+from django.conf import settings
+from .models import Files
+
+@api_view(['GET'])
+def download_file(request, id):
+    try:
+        # Получаем объект файла по ID
+        file_obj = Files.objects.get(id=id)
+        file_name_in_media = str(FileSerializer(file_obj).data["id"])
+        # print(FileSerializer(file_obj).data["id"])
+        # Полный путь к файлу
+        file_path = os.path.join(settings.MEDIA_ROOT, file_name_in_media)
+        print(file_path)
+        # Проверяем, существует ли файл
+        if not os.path.exists(file_path):
+            raise Http404("File does not exist")
+
+        # Открываем файл для чтения в бинарном режиме
+        with open(file_path, 'rb') as f:
+            response = HttpResponse(f.read(), content_type='application/octet-stream')
+            response['Content-Disposition'] = f'attachment; filename="{file_obj.file_name}"'
+            return response
+        return Response({"data": 123})
+    except Files.DoesNotExist:
+        raise Http404("File not found")
+    # return Response({"data": id})

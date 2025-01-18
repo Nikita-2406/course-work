@@ -20,7 +20,9 @@ from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from django.urls import path
 
-from app.views import UsersViewSet, FilesViewSet, getLinkForFile, check_password, get_files_user, upload_file
+from app.views import UsersViewSet, FilesViewSet, getLinkForFile, check_password, get_files_user, upload_file, download_file
+
+# from backend.app.views import download_file
 
 # from app.views import testing
 
@@ -34,7 +36,8 @@ urlpatterns = [
     path('get_link_for_file/<file_id>/', getLinkForFile),
     path("check_password/", check_password),
     path("get_files_user/<user_id>/", get_files_user),
-    path("upload_file/", upload_file)
+    path("upload_file/", upload_file),
+    path('download_file/<id>/', download_file)
 ] + router.urls
 
 from django.conf import settings

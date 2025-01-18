@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import UploadFiles from './FilesUpload';
-import DownloadButton from './ButtonDownload';
+import React, { useEffect, useState } from 'react'
+import { useLocation } from 'react-router'
+import DownloadButton from '../files/ButtonDownload';
 import { sortByDate } from '../sortingDate';
-// import { p } from 'react-router/dist/development/fog-of-war-DLtn2OLr';
 
+export const ViewFilesUser = () => {
 
-
-export const FilesWelcome = () => {
   function formatDate(dateString) {
     // Создаем объект Date из строки
     const date = new Date(dateString);
@@ -29,17 +26,12 @@ export const FilesWelcome = () => {
     // Форматируем строку
     return `${hours}:${minutes} ${day} ${month} ${year}`;
   }
-  const location = useLocation();
-  
-  const { id, name, admin } = location.state || {};
 
-  if (admin) {
-    const navigate = useNavigate()
-    useEffect(() => {navigate('/admin/', {state: location.state})}, [])
-    // navigate('admin/', {state: location.state})
-  } else {
-    
-    const [viewFiles, setViewFiles] = useState([])
+  const location = useLocation()
+  const { id, name } = location.state || {}
+  const [viewFiles, setViewFiles] = useState([])
+
+  // const [viewFiles, setViewFiles] = useState([])
     const [lastFileUpload, setLastFileUpload] = useState(new Date())
 
     useEffect(() => {
@@ -74,34 +66,19 @@ export const FilesWelcome = () => {
     })
     }, [lastFileUpload])
   
-  
-    const onGetLink = (id) => {
-      // console.log(e.target.parent)
-      fetch(`http://127.0.0.1:8000/get_link_for_file/${id}/`)
-      .then(
-        response => setLastFileUpload(new Date())
-      )
-    }
-  
     return (
       <div className='container'>
-        <h1>Добро пожаловать, {name}!</h1>
+        <h2>Файлы пользователя {name}</h2>
         <button className='button--update--files' onClick={() => {setLastFileUpload(new Date())}}>Обновить список файлов</button>
-        <UploadFiles userId={id}/>
         <ul>
         {viewFiles.map(elem => {
           return <li id={elem.id} key={elem.id}>
             <span>{elem.file_name}</span><br />
             <span>{formatDate(elem.date)}</span><br />
             < DownloadButton fileId={elem.id}/>
-            <button onClick={() => onGetLink(elem.id)}>Поделиться файлом</button><br />
-            <a href={elem.file_link}>{elem.file_link}</a>
           </li>
         })}
         </ul>
       </div>
     );
-  }
-
-  
 }

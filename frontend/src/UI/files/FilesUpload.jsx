@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const UploadFiles = ({ userId }) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
-  const serverUrl = 'http://127.0.0.1:8000/upload_file/'; // Укажите URL вашего сервера здесь
+  const serverUrl = 'http://127.0.0.1:8000/upload_file/';
 
   const handleFileChange = (event) => {
     setSelectedFiles(event.target.files);
@@ -23,7 +23,6 @@ const UploadFiles = ({ userId }) => {
 
     try {
       // Здесь происходит отправка файлов на сервер
-      console.log(formData.files)
       const response = await fetch(serverUrl, {
         method: 'POST',
         body: formData,
@@ -32,7 +31,6 @@ const UploadFiles = ({ userId }) => {
       if (response.ok) {
         const result = await response.json();
         console.log('Файлы успешно загружены:', result);
-        setSelectedFiles(null)
       } else {
         console.error('Ошибка при загрузке файлов:', response.statusText);
       }

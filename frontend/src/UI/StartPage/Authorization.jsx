@@ -32,7 +32,7 @@ export const Authorization = ({ SetViewPage }) => {
     })
     .then((data) => {
       if (data.status_code === 200) {
-        console.log(data.user[0])
+        console.log("Вы успешно авторизовались")
         navigate('/files', { state: data.user[0] }); // Перенаправляем на страницу файлов
       } else {
         setErrorMsg("Неверный логин или пароль");
