@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
+import LogoutButton from '../StartPage/logout'
 
 export const AdminPage = () => {
   const location = useLocation()
-  const { name } = location.state || {}
+  const { name, login } = location.state || {}
   if (!location.state) {
     return <h1>Авторизуйтесь!</h1>
   }
@@ -56,6 +57,7 @@ export const AdminPage = () => {
   }
   
   return <div className="container">
+    <LogoutButton login={login} />
     <h2>Здравствуйте, {name}</h2>
     <button onClick={upLoadUsers}>Обновить список пользователей</button>
     <ul>

@@ -138,9 +138,12 @@ def login_view(request):
 
             add_session = Session(login=user_login, password=user_password, user_id=search_user_data[0]["id"])
             add_session.save()
-            add_session_data = SessionSerializer(add_session).data
+            # add_session_data = SessionSerializer(search_user_data, many=True).data
 
-            return Response(add_session_data)
+            return Response({
+                "status_code": 200,
+                "user": search_user_data
+            })
 
         return Response({"error_msg": "user not found"})
     except Exception as e:
@@ -150,14 +153,14 @@ def login_view(request):
 @api_view(["DELETE"])
 def logout_view(request):
     try:
-        user_login, user_password = request.data["login"], request.data["password"]
-        search_session = Session.objects.filter(login=user_login, password=user_password)
+        user_login = request.data["login"]
+        search_session = Session.objects.filter(login=user_login)
 
         if search_session:
             search_session.delete()
             return Response({
                 "status": "deleted"
-            }, status=204)
+            })
 
         return Response({"error_msg": "user not found"})
     except Exception as e:

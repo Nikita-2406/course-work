@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
 import "./authorization.css";
 
@@ -10,6 +10,32 @@ export const Authorization = ({ SetViewPage }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate(); // Создаем экземпляр navigate
 
+  useEffect(() => {
+    const storedLogin = localStorage.getItem('userLogin');
+    const storedPassword = localStorage.getItem('userPassword');
+    if (storedLogin || storedPassword) {
+      fetch('http://127.0.0.1:8000/login/', {
+      method: "POST",
+      body: JSON.stringify({login: storedLogin, password: storedPassword}),
+      headers: {
+        "Content-Type": "application/json",
+      }
+    })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data)
+      if (data.status_code === 200) {
+        console.log("Вы успешно авторизовались", data)
+        localStorage.setItem('userLogin', login);
+        localStorage.setItem('userPassword', password);
+        navigate('/files', { state: data.user[0] }); // Перенаправляем на страницу файлов
+      }
+    });
+    }
+  }, [])
+
   const onChange = (e) => {
     const { name, value } = e.target;
     setInputInfo((prev) => ({
@@ -20,7 +46,7 @@ export const Authorization = ({ SetViewPage }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    fetch('http://127.0.0.1:8000/check_password/', {
+    fetch('http://127.0.0.1:8000/login/', {
       method: "POST",
       body: JSON.stringify(inputInfo),
       headers: {
@@ -31,9 +57,12 @@ export const Authorization = ({ SetViewPage }) => {
       return response.json();
     })
     .then((data) => {
+      console.log(data)
       if (data.status_code === 200) {
-        console.log("Вы успешно авторизовались")
+        console.log("Вы успешно авторизовались", data)
         navigate('/files', { state: data.user[0] }); // Перенаправляем на страницу файлов
+        localStorage.setItem('userLogin', login);
+        localStorage.setItem('userPassword', password);
       } else {
         setErrorMsg("Неверный логин или пароль");
       }

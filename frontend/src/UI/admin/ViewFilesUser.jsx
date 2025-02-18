@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import DownloadButton from '../files/ButtonDownload';
 import { sortByDate } from '../sortingDate';
 
@@ -30,7 +30,7 @@ export const ViewFilesUser = () => {
   const location = useLocation()
   const { id, name } = location.state || {}
   const [viewFiles, setViewFiles] = useState([])
-
+  const navigate = useNavigate()
   // const [viewFiles, setViewFiles] = useState([])
     const [lastFileUpload, setLastFileUpload] = useState(new Date())
 
@@ -65,9 +65,16 @@ export const ViewFilesUser = () => {
       }
     })
     }, [lastFileUpload])
-  
+    
+
+    const backButton = () => {
+      navigate(-1)
+    }
+
+
     return (
       <div className='container'>
+        <button onClick={backButton}>Назад</button>
         <h2>Файлы пользователя {name}</h2>
         <button className='button--update--files' onClick={() => {setLastFileUpload(new Date())}}>Обновить список файлов</button>
         <ul>

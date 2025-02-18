@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import UploadFiles from './FilesUpload';
 import DownloadButton from './ButtonDownload';
 import { sortByDate } from '../sortingDate';
+import LogoutButton from '../StartPage/logout';
 // import { p } from 'react-router/dist/development/fog-of-war-DLtn2OLr';
 
 
@@ -31,7 +32,7 @@ export const FilesWelcome = () => {
   }
   const location = useLocation();
   
-  const { id, name, admin } = location.state || {};
+  const { id, name, admin, login } = location.state || {};
 
   if (admin) {
     const navigate = useNavigate()
@@ -85,6 +86,7 @@ export const FilesWelcome = () => {
   
     return (
       <div className='container'>
+        <LogoutButton login={login} />
         <h1>Добро пожаловать, {name}!</h1>
         <button className='button--update--files' onClick={() => {setLastFileUpload(new Date())}}>Обновить список файлов</button>
         <UploadFiles userId={id}/>
