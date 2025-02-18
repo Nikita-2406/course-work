@@ -40,14 +40,49 @@ Content-Type: application/json
 {
   "name": "nikita",
   "login": "-nikita-",
-  "password": "1234",
+  "password": "1234"
 }
 
 ###
 
-GET http://127.0.0.1:8000/get_files_user/10/
+GET http://127.0.0.1:8000/get_files_user/1/
 
 
 ###
 
 GET http://127.0.0.1:8000/download_file/35/
+
+###
+
+POST http://127.0.0.1:8000/login/
+Content-Type: application/json
+
+{
+  "login": "123",
+  "password": "123"
+}
+
+###
+
+
+DELETE http://127.0.0.1:8000/logout/
+Content-Type: application/json
+
+{
+  "login": "123",
+  "password": "123"
+}
+
+###
+
+POST http://127.0.0.1:8000/check_session/
+Content-Type: application/json
+
+{
+  "login": "123",
+  "password": "123"
+}
+
+###
+
+DELETE http://127.0.0.1:8000/users/13/

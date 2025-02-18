@@ -20,7 +20,7 @@ from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from django.urls import path
 
-from app.views import UsersViewSet, FilesViewSet, getLinkForFile, check_password, get_files_user, upload_file, download_file
+from app.views import UsersViewSet, FilesViewSet, getLinkForFile, check_password, get_files_user, upload_file, download_file, login_view, logout_view, check_session
 
 # from backend.app.views import download_file
 
@@ -35,6 +35,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('get_link_for_file/<file_id>/', getLinkForFile),
     path("check_password/", check_password),
+    path("login/", login_view),
+    path("logout/", logout_view),
+    path("check_session/", check_session),
     path("get_files_user/<user_id>/", get_files_user),
     path("upload_file/", upload_file),
     path('download_file/<id>/', download_file)

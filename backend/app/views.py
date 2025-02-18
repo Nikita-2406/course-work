@@ -1,6 +1,7 @@
 from lib2to3.fixes.fix_input import context
 
-from Scripts.bottle import response
+# from app.models import Session
+# from Scripts.bottle import response
 from django.contrib.auth import login
 from django.core.files.storage import default_storage
 from django.http import HttpResponse, FileResponse, Http404
@@ -8,9 +9,9 @@ from django.template.defaultfilters import first
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet, ViewSet
 
-from app.models import Users, Files, Demo
-from app.serializers import UserSerializer, FileSerializer, DemoSer
-from django.shortcuts import render
+from app.models import Users, Files, Session
+from app.serializers import UserSerializer, FileSerializer, SessionSerializer
+# from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import uuid
@@ -47,7 +48,7 @@ class FilesViewSet(ModelViewSet):
     serializer_class = FileSerializer
 
     def create(self, request):
-        file_name, user_id = request.data["file_name"],  request.data["user_id"]
+        file_name, user_id = request.data["file_name"], request.data["user_id"]
         file = Files(file_name=file_name, file_link="", user_id=user_id)
         file.save()
         file_data = FileSerializer(file).data
@@ -121,6 +122,63 @@ def check_password(req):
         }
 
     return Response(context)
+
+@api_view(["POST"])
+def login_view(request):
+    try:
+        user_login, user_password = request.data["login"], request.data["password"]
+        search_user = Users.objects.filter(login=user_login, password=user_password)
+        search_user_data = UserSerializer(search_user, many=True).data
+        if search_user_data:
+            if Session.objects.filter(login=user_login):
+                return Response({
+                    "status": False,
+                    "error_message": "Пользователь уже вошел в систему"
+                })
+
+            add_session = Session(login=user_login, password=user_password, user_id=search_user_data[0]["id"])
+            add_session.save()
+            add_session_data = SessionSerializer(add_session).data
+
+            return Response(add_session_data)
+
+        return Response({"error_msg": "user not found"})
+    except Exception as e:
+        return Response({'er': f'{e}'})
+
+
+@api_view(["DELETE"])
+def logout_view(request):
+    try:
+        user_login, user_password = request.data["login"], request.data["password"]
+        search_session = Session.objects.filter(login=user_login, password=user_password)
+
+        if search_session:
+            search_session.delete()
+            return Response({
+                "status": "deleted"
+            }, status=204)
+
+        return Response({"error_msg": "user not found"})
+    except Exception as e:
+        return Response({'er': f'{e}'})
+
+@api_view(["POST"])
+def check_session(request):
+    try:
+        user_login, user_password = request.data["login"], request.data["password"]
+        search_session = Session.objects.filter(login=user_login, password=user_password)
+
+        if search_session:
+            return Response({
+                "status": True,
+                "user": SessionSerializer(search_session, many=True).data[0]
+            }, status=204)
+
+        return Response({"error_msg": "user not found"})
+    except Exception as e:
+        return Response({'er': f'{e}'})
+
 
 @api_view(["GET"])
 def get_files_user(req, user_id):

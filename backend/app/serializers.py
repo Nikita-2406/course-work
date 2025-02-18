@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.models import Users, Files, Demo
+from app.models import Users, Files, Session
 
 
 # class UserSerializer(serializers.Serializer):
@@ -29,7 +29,7 @@ class FileSerializer(serializers.ModelSerializer):
         model = Files
         fields = ['id', 'file_name', 'file_link', 'date', 'user_id']
 
-class DemoSer(serializers.ModelSerializer):
+class SessionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Demo
-        fields = ['id', 'text', 'user_id']
+        model = Session
+        fields = ['login', 'password']

@@ -29,6 +29,7 @@ class Files(models.Model):
         return self.file_name
 
 
-class Demo(models.Model):
-    text = models.CharField()
+class Session(models.Model):
     user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    login = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=128)

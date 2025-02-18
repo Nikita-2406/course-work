@@ -46,6 +46,14 @@ export const AdminPage = () => {
     
     // navigate('/files', { state: data.user[0] })
   }
+
+  const deleteUer = (user) => {
+    const answer = confirm(`Вы уверены что хотитте удалить пользователя ${user.name}?`)
+    if (answer) {
+      fetch(`http://127.0.0.1:8000/users/${user.id}/`, {
+        method: 'DELETE'})
+    }
+  }
   
   return <div className="container">
     <h2>Здравствуйте, {name}</h2>
@@ -56,6 +64,7 @@ export const AdminPage = () => {
           <div>id: {elem.id}</div>
           <div>name: {elem.name}</div>
           <button onClick={() => {goFilesUser(elem)}}>Перейти в файловое хранилище</button>
+          <button onClick={() => {deleteUer(elem)}}>Удалить пользователя</button>
         </li>
       })}
     </ul>
