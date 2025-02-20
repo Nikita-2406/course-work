@@ -40,7 +40,8 @@ urlpatterns = [
     path("check_session/", check_session),
     path("get_files_user/<user_id>/", get_files_user),
     path("upload_file/", upload_file),
-    path('download_file/<id>/', download_file)
+    path('download_file/<id>/', download_file),
+    path('files/', FilesViewSet.as_view({'get': 'retrieve_by_link'})),
 ] + router.urls
 
 from django.conf import settings

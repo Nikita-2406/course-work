@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const UploadFiles = ({ userId }) => {
+const UploadFiles = ({ userId, setLastFileUpload}) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
   const serverUrl = 'http://127.0.0.1:8000/upload_file/';
 
@@ -31,6 +31,7 @@ const UploadFiles = ({ userId }) => {
       if (response.ok) {
         const result = await response.json();
         console.log('Файлы успешно загружены:', result);
+        setTimeout(() => {setLastFileUpload(new Date())}, 100)
       } else {
         console.error('Ошибка при загрузке файлов:', response.statusText);
       }

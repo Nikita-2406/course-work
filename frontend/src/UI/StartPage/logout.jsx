@@ -20,6 +20,7 @@ const LogoutButton = ({ login }) => {
             })
             .then(data => {
               if (data.status == "deleted") {
+                localStorage.clear()
                 navigate("/", { replace: true });
               } else {
                 alert("Возникла какая то ошибка")

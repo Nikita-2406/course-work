@@ -13,8 +13,9 @@ export const Authorization = ({ SetViewPage }) => {
   useEffect(() => {
     const storedLogin = localStorage.getItem('userLogin');
     const storedPassword = localStorage.getItem('userPassword');
+    console.log(storedLogin, storedPassword)
     if (storedLogin || storedPassword) {
-      fetch('http://127.0.0.1:8000/login/', {
+      fetch('http://127.0.0.1:8000/check_session/', {
       method: "POST",
       body: JSON.stringify({login: storedLogin, password: storedPassword}),
       headers: {
@@ -28,8 +29,6 @@ export const Authorization = ({ SetViewPage }) => {
       console.log(data)
       if (data.status_code === 200) {
         console.log("Вы успешно авторизовались", data)
-        localStorage.setItem('userLogin', login);
-        localStorage.setItem('userPassword', password);
         navigate('/files', { state: data.user[0] }); // Перенаправляем на страницу файлов
       }
     });
@@ -61,8 +60,8 @@ export const Authorization = ({ SetViewPage }) => {
       if (data.status_code === 200) {
         console.log("Вы успешно авторизовались", data)
         navigate('/files', { state: data.user[0] }); // Перенаправляем на страницу файлов
-        localStorage.setItem('userLogin', login);
-        localStorage.setItem('userPassword', password);
+        localStorage.setItem('userLogin', inputInfo.login);
+        localStorage.setItem('userPassword', inputInfo.password);
       } else {
         setErrorMsg("Неверный логин или пароль");
       }

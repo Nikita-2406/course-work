@@ -20,6 +20,22 @@ import uuid
 
 HOST_NAME = 'http://127.0.0.1:8000/'
 
+
+def add_postfix(filename, count):
+    # Находим последнюю точку в имени файла
+    dot_index = filename.rfind('.')
+
+    # Если точки нет или она в начале, расширения нет
+    if dot_index <= 0:
+        return f"{filename} ({count})"
+
+    # Разделяем имя и расширение
+    name = filename[:dot_index]
+    extension = filename[dot_index:]
+
+    # Собираем новое имя
+    return f"{name} (1){extension}"
+
 # @api_view(["GET"])
 # def get_all_users(req):
 #     users = Users.objects.all()
@@ -47,6 +63,23 @@ class FilesViewSet(ModelViewSet):
     queryset = Files.objects.all()
     serializer_class = FileSerializer
 
+    def update(self, request, *args, **kwargs):
+        # Получаем объект по его ID
+        instance = self.get_object()
+
+        # Обновляем только поле file_name
+        file_name = request.data.get('file_name')
+        if file_name is not None:
+            instance.file_name = file_name
+            instance.save()
+            serializer = self.get_serializer(instance)
+            return Response({
+                "status_code": 200,
+                "file": serializer.data
+            })
+
+        return Response({"detail": "file_name is required."}, status=status.HTTP_400_BAD_REQUEST)
+
     def create(self, request):
         file_name, user_id = request.data["file_name"], request.data["user_id"]
         file = Files(file_name=file_name, file_link="", user_id=user_id)
@@ -59,26 +92,20 @@ class FilesViewSet(ModelViewSet):
         }
         return Response(content)
 
-# def create_file(req):
-#     demo = Demo(text="test", user_id=1)
-#     demo.save()
-#
-#     return HttpResponse(demo)
+    def retrieve_by_link(self, request):
+        try:
+            file_link = request.GET.get("link")
+            file_instance = Files.objects.get(file_link=file_link)
+            serializer = self.get_serializer(file_instance)
+            return Response(serializer.data)
+        except Files.DoesNotExist:
+            return Response({'error': 'File not found'}, status=status.HTTP_404_NOT_FOUND)
 
-# class DemoViewSet(ModelViewSet):
-#     queryset = Demo.objects.all()
-#     serializer_class = DemoSer
-#     def create(self, req): #Создание
-#         text, user_id = req.data["text"], req.data["user_id"]
-#         demo = Demo(text=text, user_id=user_id)
-#         demo.save()
-#         demo_data = DemoSer(demo).data
-#         return Response({"statys": demo_data})
 
 @api_view(['GET'])
-def getLinkForFile(request, file_id): #Сгенерировать ссылку по file_id GET запросом
+def getLinkForFile(request, file_id):
 
-    file_link = HOST_NAME + str(uuid.uuid5(uuid.NAMESPACE_URL, file_id))
+    file_link = str(uuid.uuid5(uuid.NAMESPACE_URL, file_id))
 
     counts_update = Files.objects.filter(id=file_id).update(file_link=file_link)
 
@@ -171,12 +198,13 @@ def check_session(request):
     try:
         user_login, user_password = request.data["login"], request.data["password"]
         search_session = Session.objects.filter(login=user_login, password=user_password)
-
         if search_session:
+            search_user_data = UserSerializer(Users.objects.filter(login=user_login), many=True).data
             return Response({
+                "status_code": 200,
                 "status": True,
-                "user": SessionSerializer(search_session, many=True).data[0]
-            }, status=204)
+                "user": search_user_data
+            })
 
         return Response({"error_msg": "user not found"})
     except Exception as e:
@@ -200,8 +228,20 @@ def upload_file(request):
             return Response({'error': 'Файл и user_id обязательны.'}, status=status.HTTP_400_BAD_REQUEST)
 
             # Создаем запись в базе данных
+        # files_with_this_name = Files.objects.all()
+        files_with_this_name_data = FileSerializer(Files.objects.all(), many=True).data
+        prefix = 0
+        for elem in files_with_this_name_data:
+            if elem["file_name"] == file.name:
+                prefix += 1
+
+        if prefix == 0:
+            new_file_name = file.name
+        else:
+            new_file_name = add_postfix(file.name, prefix)
+
         file_instance = Files(
-            file_name=file.name,
+            file_name=new_file_name,
             file_link="",
             user_id=user_id
         )

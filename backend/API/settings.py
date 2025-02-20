@@ -79,14 +79,16 @@ WSGI_APPLICATION = 'API.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+from .settings_api import name_db, user_db, password_db, host_db, port_db, media_url, media_root_name
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'course_project',
-        'USER': 'postgres',
-        'PASSWORD': '1',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': name_db,
+        'USER': user_db,
+        'PASSWORD': password_db,
+        'HOST': host_db,
+        'PORT': port_db,
     }
 }
 
@@ -139,6 +141,5 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Настройки для загрузки медиафайлов
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+MEDIA_URL = media_url
+MEDIA_ROOT = os.path.join(BASE_DIR, media_root_name)
