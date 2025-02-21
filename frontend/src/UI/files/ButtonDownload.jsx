@@ -1,9 +1,10 @@
 import React from 'react';
+import { BASEUSLAPI } from '../settings';
 
 const DownloadButton = ({ fileId }) => {
     const handleDownload = () => {
         // Создаем URL для файла
-        const fileUrl =` http://localhost:8000/download_file/${fileId}/`;
+        const fileUrl =`${BASEUSLAPI}download_file/${fileId}/`;
 
         // Создаем элемент <a>
         const link = document.createElement('a');

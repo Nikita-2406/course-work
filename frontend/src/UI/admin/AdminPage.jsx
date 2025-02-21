@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import LogoutButton from '../StartPage/logout'
+import { BASEUSLAPI } from '../settings'
 
 export const AdminPage = () => {
   const location = useLocation()
@@ -13,7 +14,7 @@ export const AdminPage = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/users/")
+    fetch(`${BASEUSLAPI}users/`)
     .then(response => {
       if (response.ok) {
         return response.json()
@@ -26,7 +27,7 @@ export const AdminPage = () => {
   }, [])
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/users/")
+    fetch(`${BASEUSLAPI}users/`)
     .then(response => {
       if (response.ok) {
         return response.json()
@@ -51,8 +52,9 @@ export const AdminPage = () => {
   const deleteUer = (user) => {
     const answer = confirm(`Вы уверены что хотитте удалить пользователя ${user.name}?`)
     if (answer) {
-      fetch(`http://127.0.0.1:8000/users/${user.id}/`, {
+      fetch(`${BASEUSLAPI}users/${user.id}/`, {
         method: 'DELETE'})
+      setTimeout(() => {upLoadUsers()}, 100)
     }
   }
   

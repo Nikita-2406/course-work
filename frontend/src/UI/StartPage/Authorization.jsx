@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; // Импортируем useNavigate
-import "./authorization.css";
+import { BASEUSLAPI } from "../settings";
 
 export const Authorization = ({ SetViewPage }) => {
   const [inputInfo, setInputInfo] = useState({
@@ -13,9 +13,8 @@ export const Authorization = ({ SetViewPage }) => {
   useEffect(() => {
     const storedLogin = localStorage.getItem('userLogin');
     const storedPassword = localStorage.getItem('userPassword');
-    console.log(storedLogin, storedPassword)
     if (storedLogin || storedPassword) {
-      fetch('http://127.0.0.1:8000/check_session/', {
+      fetch(`${BASEUSLAPI}check_session/`, {
       method: "POST",
       body: JSON.stringify({login: storedLogin, password: storedPassword}),
       headers: {
@@ -26,7 +25,6 @@ export const Authorization = ({ SetViewPage }) => {
       return response.json();
     })
     .then((data) => {
-      console.log(data)
       if (data.status_code === 200) {
         console.log("Вы успешно авторизовались", data)
         navigate('/files', { state: data.user[0] }); // Перенаправляем на страницу файлов
@@ -45,7 +43,7 @@ export const Authorization = ({ SetViewPage }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    fetch('http://127.0.0.1:8000/login/', {
+    fetch(`${BASEUSLAPI}login/`, {
       method: "POST",
       body: JSON.stringify(inputInfo),
       headers: {

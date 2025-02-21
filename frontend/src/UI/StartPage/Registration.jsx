@@ -1,6 +1,5 @@
 import { useState } from "react"
-// import "./registration.css"
-
+import { BASEUSLAPI } from "../settings"
 
 export const Registration = ({ SetViewPage }) => {
 
@@ -22,7 +21,7 @@ export const Registration = ({ SetViewPage }) => {
   const onSubmit = (e) => {
     e.preventDefault()
 
-    fetch('http://127.0.0.1:8000/users/', {
+    fetch(`${BASEUSLAPI}users/`, {
       method: "POST",
       body: JSON.stringify(inputInfo),
       headers: {

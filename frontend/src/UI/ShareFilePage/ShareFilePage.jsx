@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import DownloadButton from '../files/ButtonDownload';
-// import GoToStartButton from '../StartPage/ButtonGoStart';
-
+import { BASEUSLAPI } from '../settings';
 export const ShareFilePage = () => {
   const { fileLink } = useParams();
   const [fileData, setFileData] = useState('');
@@ -10,7 +9,7 @@ export const ShareFilePage = () => {
 
   useEffect(() => {
     if (fileLink !== undefined) {
-      const url = `http://127.0.0.1:8000/files/?link=${fileLink}`;
+      const url = `${BASEUSLAPI}files/?link=${fileLink}`;
       console.log(url);
       
       fetch(url)

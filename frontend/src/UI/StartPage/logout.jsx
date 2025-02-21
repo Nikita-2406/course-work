@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BASEUSLAPI } from '../settings';
 
 const LogoutButton = ({ login }) => {
   const navigate = useNavigate()
     const handleLogout = async () => {
-        fetch('http://127.0.0.1:8000/logout/', {
+        fetch(`${BASEUSLAPI}logout/`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

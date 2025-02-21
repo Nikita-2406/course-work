@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import DownloadButton from '../files/ButtonDownload';
 import { sortByDate } from '../sortingDate';
+import { BASEUSLAPI } from '../settings';
 
 export const ViewFilesUser = () => {
 
@@ -35,7 +36,7 @@ export const ViewFilesUser = () => {
     const [lastFileUpload, setLastFileUpload] = useState(new Date())
 
     useEffect(() => {
-      fetch(`http://127.0.0.1:8000/get_files_user/${id}/`)
+      fetch(`${BASEUSLAPI}get_files_user/${id}/`)
     .then(response => {
       if (response.ok) {
         return response.json()
@@ -51,7 +52,7 @@ export const ViewFilesUser = () => {
     }, [])
   
     useEffect(() => {
-      fetch(`http://127.0.0.1:8000/get_files_user/${id}/`)
+      fetch(`${BASEUSLAPI}get_files_user/${id}/`)
     .then(response => {
       if (response.ok) {
         return response.json()

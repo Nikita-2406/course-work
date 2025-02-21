@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { BASEUSLAPI } from '../settings';
 
 const UploadFiles = ({ userId, setLastFileUpload}) => {
   const [selectedFiles, setSelectedFiles] = useState(null);
-  const serverUrl = 'http://127.0.0.1:8000/upload_file/';
+  const serverUrl = `${BASEUSLAPI}upload_file/`;
 
   const handleFileChange = (event) => {
     setSelectedFiles(event.target.files);

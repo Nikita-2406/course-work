@@ -4,9 +4,11 @@ import UploadFiles from './FilesUpload';
 import DownloadButton from './ButtonDownload';
 import { sortByDate } from '../sortingDate';
 import LogoutButton from '../StartPage/logout';
+import { BASEURLWEBSITE, BASEUSLAPI } from '../settings';
 // import { p } from 'react-router/dist/development/fog-of-war-DLtn2OLr';
 
-const BASEURL = "http://localhost:5173/"
+// const BASEURLWEBSITE = "http://localhost:5173/"
+// const BASEUSRAPI = 'http://127.0.0.1:8000/'
 
 export const FilesWelcome = () => {
   function formatDate(dateString) {
@@ -44,7 +46,7 @@ export const FilesWelcome = () => {
     const [lastFileUpload, setLastFileUpload] = useState(new Date())
 
     useEffect(() => {
-      fetch(`http://127.0.0.1:8000/get_files_user/${id}/`)
+      fetch(`get_files_user/${id}/`)
     .then(response => {
       if (response.ok) {
         return response.json()
@@ -60,7 +62,7 @@ export const FilesWelcome = () => {
     }, [])
   
     useEffect(() => {
-      fetch(`http://127.0.0.1:8000/get_files_user/${id}/`)
+      fetch(`${BASEUSLAPI}get_files_user/${id}/`)
     .then(response => {
       if (response.ok) {
         return response.json()
@@ -78,7 +80,7 @@ export const FilesWelcome = () => {
   
     const onGetLink = (id) => {
       // console.log(e.target.parent)
-      fetch(`http://127.0.0.1:8000/get_link_for_file/${id}/`)
+      fetch(`${BASEUSLAPI}get_link_for_file/${id}/`)
       .then(
         response => setLastFileUpload(new Date())
       )
@@ -88,7 +90,7 @@ export const FilesWelcome = () => {
       const newName = prompt("Введите новое имя файла: ")
 
       try {
-        fetch(`http://127.0.0.1:8000/files/${elem.id}/`, {
+        fetch(`${BASEUSLAPI}files/${elem.id}/`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -116,7 +118,7 @@ export const FilesWelcome = () => {
         <UploadFiles userId={id} setLastFileUpload={setLastFileUpload}/>
         <ul>
         {viewFiles.map(elem => {
-          const fileLink = elem.file_link ? `${BASEURL}share/${elem.file_link}` : ''
+          const fileLink = elem.file_link ? `${BASEURLWEBSITE}share/${elem.file_link}` : ''
           return <li id={elem.id} key={elem.id}>
             <span>{elem.file_name}</span>
             <button onClick={() => {renameButton(elem)}}>Переименовать</button><br />
