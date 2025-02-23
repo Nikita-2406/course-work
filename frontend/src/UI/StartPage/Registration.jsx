@@ -53,7 +53,7 @@ export const Registration = ({ SetViewPage }) => {
         <h2>Регистрация</h2>
         <div className="input--block">
           <input type="text" name="name" onChange={onChange} placeholder="Имя" className="input--form"/>
-          <input type="text" name="login" onChange={onChange} placeholder="Логиг" className="input--form"/>
+          <input type="text" name="login" onChange={onChange} placeholder="Логин" className="input--form"/>
           <input type="text" name="password" onChange={onChange} placeholder="Пароль" className="input--form"/>
           <div className="errorMsg">{errorMsg}</div>
         </div>
