@@ -13,8 +13,8 @@ const LogoutButton = ({ login }) => {
                 body: JSON.stringify({login: login}),
             })
             .then(resp => {
-              if (resp.ok) {
-                return resp.json();
+              if (resp.status == 204) {
+                return {status: "deleted"};
               } else {
                 return "Error";
               }

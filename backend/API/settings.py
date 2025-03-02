@@ -137,9 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 from pathlib import Path
 
-# Путь к корневой директории вашего проекта
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Настройки для загрузки медиафайлов
 MEDIA_URL = media_url
 MEDIA_ROOT = os.path.join(BASE_DIR, media_root_name)

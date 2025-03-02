@@ -12,7 +12,7 @@ GET http://127.0.0.1:8000/files/
 
 ###
 
-GET http://127.0.0.1:8000/get_link_for_file/16/ 
+GET http://127.0.0.1:8000/get_link_for_file/64/ 
 
 ###
 
@@ -20,7 +20,7 @@ DELETE http://127.0.0.1:8000/files/10/
 
 ###
 
-GET http://127.0.0.1:8000/users/1/
+GET http://127.0.0.1:8000/users/16/
 
 ###
 
@@ -58,8 +58,8 @@ POST http://127.0.0.1:8000/login/
 Content-Type: application/json
 
 {
-  "login": "admin",
-  "password": "1"
+  "login": "qwertyu",
+  "password": "3"
 }
 
 ###
@@ -69,7 +69,7 @@ DELETE http://127.0.0.1:8000/logout/
 Content-Type: application/json
 
 {
-  "login": "123"
+  "login": "admin"
 }
 
 ###
@@ -78,8 +78,8 @@ POST http://127.0.0.1:8000/check_session/
 Content-Type: application/json
 
 {
-  "login": "123",
-  "password": "123"
+  "login": "admin",
+  "password": "1"
 }
 
 ###
